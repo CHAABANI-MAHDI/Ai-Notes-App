@@ -1,0 +1,5 @@
+{
+  "name": "AI Notes — by Profit Studio",
+  "description": "A modern SaaS-style AI-powered notes dashboard built with Google AI and deployed using Supabase.\nDesigned with a clean UI, structured components, and scalable architecture for real-world backend integration.",
+  "requestFramePermissions": []
+}

@@ -1,11 +1,12 @@
 # 📝 AI Notes App
 
-A modern, full-stack note-taking application built with React, TypeScript, Tailwind CSS, and Supabase backend for secure storage and authentication.
+A modern, full-stack note-taking application with AI-powered features built with React, TypeScript, Tailwind CSS, Supabase backend for secure storage, and Google AI Studio (Gemini API) for intelligent text enhancement.
 
 ![React](https://img.shields.io/badge/React-19.2.4-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript)
 ![Tailwind%20CSS](https://img.shields.io/badge/Tailwind%20CSS-3-38B2AC?logo=tailwindcss)
-![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=node.js)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase)
+![Google%20AI](https://img.shields.io/badge/Google%20AI-Gemini-EA4335?logo=google)
 
 ## ✨ Features
 
@@ -16,6 +17,13 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 - **Search & Filter** - Quick note search and filtering
 - **Dark Mode** - Beautiful dark theme with CSS variables
 - **Responsive Design** - Mobile-first, works seamlessly on all devices
+
+### 🤖 Google AI Features
+
+- **AI-Powered Text Enhancement** - Improve notes using Google Gemini API
+- **Smart Suggestions** - Get intelligent writing suggestions
+- **Content Optimization** - Enhance clarity and readability
+- **Powered by Google AI Studio** - Enterprise-grade AI capabilities
 
 ### 🔐 Authentication & Security
 
@@ -49,11 +57,10 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 - **Lucide React** - Beautiful icon library
 - **Quill Editor** - Rich text editing (via CDN)
 
-### Backend
+### AI & Integration
 
-- **Node.js** - JavaScript runtime
-- **Express.js 5.2** - Web server framework
-- **CORS** - Cross-origin request handling
+- **Google AI Studio (Gemini API)** - Advanced text enhancement
+- **Supabase JS Client** - Backend integration library
 
 ### Database & Auth
 
@@ -67,6 +74,7 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 
 - Node.js 16+ and npm
 - Supabase account ([Sign up here](https://supabase.io))
+- Google AI Studio account ([Access here](https://ai.google.dev)) - for Gemini API
 
 ### Installation
 
@@ -90,6 +98,7 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
    ```env
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   GEMINI_API_KEY=your_google_ai_studio_key
    ```
 
 4. **Start the development server**
@@ -99,6 +108,7 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
    ```
 
 5. **Open your browser**
+
    ```
    http://localhost:5173
    ```
@@ -134,16 +144,11 @@ ai-notes/
 │   ├── layouts/
 │   │   └── DashboardLayout.tsx
 │   ├── services/
-│   │   ├── aiService.ts
-│   │   ├── noteService.ts
-│   │   └── storageService.ts
-│   ├── App.tsx
-│   └── index.tsx
-├── server/
-│   └── routes/
-│       └── ai.ts
-├── server.ts
-└── package.json
+   │   ├── aiService.ts (Google Gemini integration)
+   │   ├── noteService.ts
+   │   └── storageService.ts
+   ├── App.tsx
+   └── index.tsx
 ```
 
 ## 🎯 Features in Detail
@@ -190,10 +195,17 @@ ai-notes/
 - Verify Supabase credentials in `.env.local`
 - Check storage bucket permissions
 
-### CORS Errors
+### AI Features Not Working
 
-- Verify backend is running on port 5001
-- Check VITE_API_URL in .env.local
+- Ensure GEMINI_API_KEY is set in `.env.local`
+- Get your key from [Google AI Studio](https://ai.google.dev)
+- Verify Gemini API is enabled in your Google Cloud project
+
+### Authentication Issues
+
+- Check that Supabase credentials are correct
+- Verify user is authenticated before accessing protected routes
+- Check browser console for detailed error messages
 
 ## 📈 Performance Optimizations
 
@@ -224,11 +236,12 @@ MIT License - Open source and free to use
 
 ## 🎉 Getting Started Tips
 
-1. **Start with CreateNote** - Create your first note
-2. **Create Multiple Notes** - Build a collection
-3. **Use Dark Mode** - Better for extended sessions
-4. **Explore Grid/List** - Find your preferred view
+1. **Configure Supabase** - Set up your database and auth
+2. **Add Gemini API Key** - Enable AI features in your app
+3. **Start Creating Notes** - Build your note collection
+4. **Use Dark Mode** - Better for extended sessions
+5. **Explore AI Features** - Enhance your notes with Gemini
 
 ---
 
-**Made with ❤️ by Mahdi Chaabani** | Ready to build your note-taking experience!
+**Made with ❤️ by Mahdi Chaabani** | Built with Supabase & Google AI Studio | Ready for intelligent note-taking!

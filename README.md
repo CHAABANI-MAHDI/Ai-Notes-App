@@ -10,6 +10,7 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 ## ✨ Features
 
 ### 📱 Core Features
+
 - **Create & Edit Notes** - Rich text editor with Quill support
 - **Note Organization** - View notes in grid or list format
 - **Search & Filter** - Quick note search and filtering
@@ -17,17 +18,20 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 - **Responsive Design** - Mobile-first, works seamlessly on all devices
 
 ### 🔐 Authentication & Security
+
 - **Supabase Auth** - Secure user authentication
 - **Private Storage** - Encrypted image storage in Supabase
 - **Password Reset** - Secure password reset flow
 - **Account Management** - User profile and account deletion
 
 ### 🖼️ Image Optimization
+
 - **Signed URL Caching** - 55-minute TTL for faster image loads
 - **Lazy Loading** - Images load on-demand
 - **Responsive Images** - Automatically scaled for different screen sizes
 
 ### 🗑️ Note Management
+
 - **Multi-Select Delete** - Bulk delete with confirmation modals
 - **Single Note View** - Detailed note view with attachments
 - **Edit & Update** - Full note editing capabilities
@@ -36,6 +40,7 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 19.2.4** - UI framework
 - **TypeScript 5.8** - Type safety
 - **Tailwind CSS 3** - Styling with dark mode support
@@ -45,11 +50,13 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 - **Quill Editor** - Rich text editing (via CDN)
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express.js 5.2** - Web server framework
 - **CORS** - Cross-origin request handling
 
 ### Database & Auth
+
 - **Supabase** - PostgreSQL database, Auth, Storage
 - **PostgreSQL** - Relational database
 - **Row Level Security (RLS)** - Database-level access control
@@ -57,25 +64,29 @@ A modern, full-stack note-taking application built with React, TypeScript, Tailw
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 16+ and npm
 - Supabase account ([Sign up here](https://supabase.io))
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/CHAABANI-MAHDI/AI-Notes-App.git
    cd ai-notes
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
-   
+
    Create `.env.local` file for frontend:
+
    ```env
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -138,18 +149,21 @@ ai-notes/
 ## 🎯 Features in Detail
 
 ### Multi-Select Delete
+
 - In MyNotes, select multiple notes with checkboxes
 - Click "Delete Selected" button
 - Confirm in modal dialog
 - All selected notes deleted instantly
 
 ### Image Optimization
+
 - Signed URLs cached for 55 minutes
 - Reduces Supabase API calls
 - Lazy loading for faster page loads
 - Responsive scaling for all devices
 
 ### Dark Mode
+
 - Toggle between light and dark themes
 - Smooth transitions
 - Persistent user preference
@@ -172,10 +186,12 @@ ai-notes/
 ## 🐛 Troubleshooting
 
 ### Images Not Loading
+
 - Verify Supabase credentials in `.env.local`
 - Check storage bucket permissions
 
 ### CORS Errors
+
 - Verify backend is running on port 5001
 - Check VITE_API_URL in .env.local
 
@@ -190,6 +206,7 @@ ai-notes/
 ## 🤝 Contributing
 
 Contributions welcome! Feel free to:
+
 1. Fork the repository
 2. Create a feature branch
 3. Submit a pull request
@@ -201,6 +218,7 @@ MIT License - Open source and free to use
 ## 👨‍💻 Author
 
 **Mahdi Chaabani**
+
 - GitHub: [@CHAABANI-MAHDI](https://github.com/CHAABANI-MAHDI)
 - Project: [AI-Notes-App](https://github.com/CHAABANI-MAHDI/AI-Notes-App)
 

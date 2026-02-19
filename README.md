@@ -1,3 +1,9 @@
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
+
+
 # 📝 AI Notes App
 
 A modern, full-stack note-taking application with AI-powered features built with React, TypeScript, Tailwind CSS, Supabase backend for secure storage, and Google AI Studio (Gemini API) for intelligent text enhancement.

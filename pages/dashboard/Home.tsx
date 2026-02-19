@@ -257,10 +257,10 @@ export const Home: React.FC = () => {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {[
-            { icon: '📝', title: 'Rich Editor', desc: 'Write with formatting, links, and embeds' },
+          {[{ icon: '📎', title: 'File Uploads', desc: 'Attach files and keep related resources with your notes' },
             { icon: '🔐', title: 'Secure & Private', desc: 'Your notes are encrypted and safe' },
             { icon: '🌐', title: 'Access Anywhere', desc: 'Available on all your devices' },
+            
           ].map((feature, idx) => (
             <div
               key={idx}

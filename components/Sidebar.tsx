@@ -10,9 +10,9 @@ export const Sidebar: React.FC = () => {
   const { pathname } = location;
   const { isAuthenticated, logout, user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate(RoutePath.HOME);
+  const handleLogout = async () => {
+    await logout();
+    navigate(RoutePath.HOME, { replace: true });
   };
 
   const handleLogin = () => {

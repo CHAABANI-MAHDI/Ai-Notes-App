@@ -63,10 +63,11 @@ export const DashboardLayout: React.FC = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsProfileMenuOpen(false);
-    logout();
-    navigate(RoutePath.HOME);
+    setIsMobileNavOpen(false);
+    await logout();
+    navigate(RoutePath.HOME, { replace: true });
   };
 
   const handleLogin = () => navigate(RoutePath.LOGIN);
@@ -117,7 +118,7 @@ export const DashboardLayout: React.FC = () => {
             onClick={() => setIsMobileNavOpen(false)}
           />
           <aside
-            className="fixed left-0 top-0 z-50 h-screen w-72 p-4 md:hidden"
+            className="fixed left-0 top-0 z-50 h-screen w-72 p-4 md:hidden flex flex-col"
             style={{
               background: 'var(--app-surface)',
               borderRight: '1.5px solid var(--app-border-soft)',
@@ -146,7 +147,7 @@ export const DashboardLayout: React.FC = () => {
                 <X size={18} />
               </button>
             </div>
-            <nav className="space-y-1">
+            <nav className="space-y-1 flex-1">
               {mobileNavItems.map((item) => (
                 <Link
                   key={item.path}
@@ -167,6 +168,46 @@ export const DashboardLayout: React.FC = () => {
                 </Link>
               ))}
             </nav>
+
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-150"
+                style={{
+                  border: '1.5px solid var(--app-border)',
+                  background: 'var(--app-surface)',
+                  color: 'var(--text-accent)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.background = 'var(--nav-hover-bg)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary-300)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.background = 'var(--app-surface)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--app-border)';
+                }}
+              >
+                <LogOut size={16} />
+                Sign Out
+              </button>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-0.5"
+                style={{
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                  boxShadow: '0 4px 16px rgba(99,102,241,0.35)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(99,102,241,0.45)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(99,102,241,0.35)';
+                }}
+              >
+                Sign In
+              </button>
+            )}
           </aside>
         </>
       )}
@@ -399,18 +440,6 @@ export const DashboardLayout: React.FC = () => {
                       }}
                     >
                       <Settings size={15} /> Settings
-                    </button>
-
-                    <div style={{ borderTop: '1px solid var(--app-border-soft)', margin: '6px 0' }} />
-
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-150"
-                      style={{ color: '#dc2626' }}
-                      onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'var(--nav-hover-bg)')}
-                      onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
-                    >
-                      <LogOut size={15} /> Sign Out
                     </button>
                   </div>
                 </div>

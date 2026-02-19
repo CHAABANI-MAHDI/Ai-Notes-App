@@ -6,9 +6,11 @@ import { supabase } from '../../supabaseClient';
 import { RoutePath } from '../../types';
 import { storageService } from '../../services/storageService';
 import { StorageImage } from '../../components/ui/StorageImage';
+import { useAuth } from '../../context/AuthContext';
 
 export const Account: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [userId, setUserId] = useState('');
@@ -129,8 +131,8 @@ export const Account: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate(RoutePath.LOGIN);
+    await logout();
+    navigate(RoutePath.HOME, { replace: true });
   };
 
   if (fetching) {

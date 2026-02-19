@@ -279,7 +279,7 @@ export const Account: React.FC = () => {
                     (e.currentTarget as HTMLElement).style.background = 'var(--app-surface)';
                     (e.currentTarget as HTMLElement).style.borderColor = 'var(--app-border)';
                   }}
-                >
+                > 
                   {resetLoading ? 'Sending...' : 'Reset'}
                 </button>
               </div>

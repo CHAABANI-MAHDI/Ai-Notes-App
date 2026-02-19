@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Shield, Save, Camera, Lock, ChevronRight, Globe, Key, Trash2, AlertCircle } from 'lucide-react';
+import { User, Mail, Save, Camera, ChevronRight, Globe, Key, Download } from 'lucide-react';
 import { Input } from '../../components/ui/Input';
 import { supabase } from '../../supabaseClient';
 import { RoutePath } from '../../types';
@@ -15,8 +15,7 @@ export const Account: React.FC = () => {
   const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({ fullName: '', displayName: '', timezone: 'UTC-8 (Pacific Time)' });
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
 
   useEffect(() => {
@@ -96,70 +95,36 @@ export const Account: React.FC = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    setDeleteLoading(true);
+  const handleExportNotes = async () => {
+    setExportLoading(true);
     try {
-      // Call the Supabase function to delete user data
-      const { error: rpcError } = await supabase.rpc('delete_my_account');
-      
-      if (rpcError) {
-        console.log('RPC function not available, falling back to manual deletion');
-        
-        // Fallback: Manual deletion if RPC not available
-        // Delete all notes for this user
-        const { data: userNotes } = await supabase
-          .from('notes')
-          .select('id, thumbnail_url, attachments')
-          .eq('user_id', userId);
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .order('updated_at', { ascending: false });
 
-        if (userNotes && userNotes.length > 0) {
-          // Delete note files from storage
-          for (const note of userNotes) {
-            if (note.thumbnail_url) {
-              await storageService.deleteFile(note.thumbnail_url).catch(() => {});
-            }
-            if (note.attachments && Array.isArray(note.attachments)) {
-              for (const att of note.attachments) {
-                if (att.path) {
-                  await storageService.deleteFile(att.path).catch(() => {});
-                }
-              }
-            }
-          }
+      if (error) throw error;
 
-          // Delete all notes from database
-          const { error: deleteNotesError } = await supabase
-            .from('notes')
-            .delete()
-            .eq('user_id', userId);
-          if (deleteNotesError) throw deleteNotesError;
-        }
-      }
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        userId,
+        notes: data || [],
+      };
 
-      // Delete avatar from storage
-      if (avatarPath && !avatarPath.startsWith('http')) {
-        await storageService.deleteFile(avatarPath).catch(() => {});
-      }
-
-      // Attempt to delete the auth user using admin API
-      try {
-        const response = await supabase.auth.admin.deleteUser(userId);
-        if (response?.error) throw response.error;
-      } catch (adminError) {
-        // Admin API might not be available on client side
-        console.log('Admin API not available, proceeding with sign out');
-      }
-
-      // Sign out the user
-      await supabase.auth.signOut();
-      alert('Account deleted successfully. You have been signed out.');
-      navigate(RoutePath.LOGIN);
-    } catch (error: any) {
-      console.error('Error deleting account:', error);
-      setShowDeleteConfirm(false);
-      alert('Error deleting account. Please try again or contact support.');
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ai-notes-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting notes:', error);
+      alert('Failed to export notes. Please try again.');
     } finally {
-      setDeleteLoading(false);
+      setExportLoading(false);
     }
   };
 
@@ -320,21 +285,21 @@ export const Account: React.FC = () => {
               </div>
             </div>
 
-            {/* Danger Zone */}
-            <div className="rounded-2xl p-5" style={{ background: '#fff5f5', border: '1.5px solid #fecaca' }}>
-              <h2 className="mb-3 text-[10.5px] font-bold uppercase tracking-widest" style={{ color: '#dc2626' }}>Danger Zone</h2>
-              <p className="mb-4 text-sm" style={{ color: '#b91c1c' }}>Delete account is permanent and removes all notes.</p>
+            {/* Export Notes */}
+            <div className="rounded-2xl p-5" style={{ background: 'var(--card-bg)', border: '1.5px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+              <h2 className="mb-3 text-[10.5px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-accent-soft)' }}>Export Notes</h2>
+              <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>Download a JSON backup of your notes and attachments metadata.</p>
               <button
                 type="button"
-                onClick={() => setShowDeleteConfirm(true)}
-                disabled={deleteLoading}
+                onClick={handleExportNotes}
+                disabled={exportLoading}
                 className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-0.5 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)', boxShadow: '0 4px 12px rgba(239,68,68,0.25)' }}
-                onMouseEnter={e => !deleteLoading && ((e.currentTarget as HTMLElement).style.boxShadow = '0 6px 18px rgba(239,68,68,0.35)')}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(239,68,68,0.25)')}
+                style={{ background: 'linear-gradient(135deg, #22c55e, #16a34a)', boxShadow: '0 4px 12px rgba(34,197,94,0.25)' }}
+                onMouseEnter={e => !exportLoading && ((e.currentTarget as HTMLElement).style.boxShadow = '0 6px 18px rgba(34,197,94,0.35)')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(34,197,94,0.25)')}
               >
-                <Trash2 size={14} />
-                {deleteLoading ? 'Deleting...' : 'Delete Account'}
+                <Download size={14} />
+                {exportLoading ? 'Exporting...' : 'Export Notes'}
               </button>
             </div>
           </div>
@@ -379,66 +344,6 @@ export const Account: React.FC = () => {
         </section>
       </form>
 
-      {/* Delete Account Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
-          style={{ background: 'rgba(30,27,75,0.5)', backdropFilter: 'blur(8px)' }}
-          onClick={() => !deleteLoading && setShowDeleteConfirm(false)}
-        >
-          <div
-            className="relative w-full max-w-md rounded-3xl overflow-hidden flex flex-col px-8 py-8 animate-in scale-in duration-300"
-            style={{ background: 'var(--card-bg)', border: '1.5px solid var(--card-border)', boxShadow: 'var(--card-shadow-hover)' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Icon Badge */}
-            <div
-              className="flex items-center justify-center h-16 w-16 rounded-full mb-6 mx-auto"
-              style={{ background: '#fee2e2', boxShadow: '0 0 0 12px rgba(239,68,68,0.05)' }}
-            >
-              <AlertCircle size={32} style={{ color: '#dc2626' }} />
-            </div>
-
-            {/* Heading */}
-            <h3
-              className="text-center text-2xl sm:text-3xl font-extrabold mb-3"
-              style={{ color: 'var(--text-primary)', fontFamily: "'DM Sans', sans-serif" }}
-            >
-              Delete Account?
-            </h3>
-
-            {/* Description */}
-            <p className="text-center text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-              This action is <span style={{ color: '#dc2626', fontWeight: 600 }}>permanent</span> and cannot be undone. All your notes, files, and account data will be deleted.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row gap-3">
-              <button
-                type="button"
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={deleteLoading}
-                className="flex-1 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-150"
-                style={{ border: '1.5px solid var(--input-border)', background: 'transparent', color: 'var(--text-secondary)' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary-300)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-accent)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--input-border)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleDeleteAccount}
-                disabled={deleteLoading}
-                className="flex-1 rounded-xl px-5 py-3 text-sm font-semibold text-white transition-all duration-150 hover:-translate-y-0.5 disabled:opacity-60 flex items-center justify-center gap-2"
-                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)', boxShadow: '0 4px 14px rgba(239,68,68,0.28)' }}
-              >
-                <Trash2 size={15} />
-                {deleteLoading ? 'Deleting...' : 'Yes, Delete'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

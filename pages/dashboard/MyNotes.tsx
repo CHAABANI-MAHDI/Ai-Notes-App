@@ -236,12 +236,12 @@ export const MyNotes: React.FC = () => {
 
       {/* ── List View ── */}
       {!loading && viewMode === 'list' && filteredNotes.length > 0 && (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5 sm:gap-3">
           {filteredNotes.map((note, index) => (
             <div
               key={note.id}
               onClick={() => navigate(RoutePath.NOTE_DETAIL.replace(':id', note.id))}
-              className="group cursor-pointer flex flex-col gap-3 rounded-2xl px-4 py-4 transition-all duration-200 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
+              className="group cursor-pointer flex flex-col gap-3 rounded-2xl px-3.5 py-3.5 transition-all duration-200 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:gap-4 sm:px-5 sm:py-4"
               style={{ background: 'var(--card-bg)', border: '1.5px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary-300)';
@@ -253,9 +253,9 @@ export const MyNotes: React.FC = () => {
               }}
             >
               {/* Index / mini thumb */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5 sm:gap-3">
                 <div
-                  className="flex-shrink-0 h-11 w-11 rounded-xl overflow-hidden flex items-center justify-center"
+                  className="flex-shrink-0 h-10 w-10 rounded-xl overflow-hidden flex items-center justify-center sm:h-11 sm:w-11"
                   style={{ background: 'var(--badge-soft-bg)', border: '1.5px solid var(--card-border)' }}
                 >
                   {note.thumbnailUrl ? (
@@ -269,10 +269,10 @@ export const MyNotes: React.FC = () => {
 
                 {/* Title + preview */}
                 <div className="flex-1 min-w-0 sm:hidden">
-                  <h3 className="text-sm font-bold truncate" style={{ color: 'var(--text-primary)' }}>
+                  <h3 className="text-[15px] font-bold truncate" style={{ color: 'var(--text-primary)' }}>
                     {note.title || 'Untitled Note'}
                   </h3>
-                  <p className="mt-0.5 text-xs line-clamp-2" style={{ color: 'var(--text-muted)' }}>
+                  <p className="mt-0.5 text-[12px] line-clamp-2 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                     {previewsById.get(note.id) || 'Empty note'}
                   </p>
                 </div>
@@ -289,11 +289,23 @@ export const MyNotes: React.FC = () => {
               </div>
 
               {/* Meta + actions */}
-              <div className="flex items-center justify-between gap-3 sm:justify-end sm:gap-4">
+              <div className="flex items-center justify-between gap-2.5 pt-2 border-t sm:pt-0 sm:justify-end sm:gap-4 sm:border-t-0" style={{ borderTopColor: 'var(--app-border-soft)' }}>
                 <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-accent-soft)' }}>
                   <Calendar size={11} style={{ color: 'var(--text-accent-soft)' }} />
                   {new Date(note.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                 </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(RoutePath.NOTE_DETAIL.replace(':id', note.id));
+                  }}
+                  className="inline-flex sm:hidden items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold"
+                  style={{ color: 'var(--text-accent)', background: 'var(--badge-soft-bg)', border: '1px solid var(--app-border-soft)' }}
+                >
+                  Open
+                  <ArrowUpRight size={13} />
+                </button>
 
                 <div className="hidden md:block">
                   <div className="h-6 w-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white"
@@ -305,7 +317,7 @@ export const MyNotes: React.FC = () => {
                     e.stopPropagation();
                     setDeleteConfirm(note.id);
                   }}
-                  className="p-2 rounded-lg transition-all duration-150"
+                  className="p-2.5 sm:p-2 rounded-lg transition-all duration-150"
                   style={{ color: 'var(--text-muted)', background: 'transparent' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#dc2626'; (e.currentTarget as HTMLElement).style.background = '#fee2e2'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}

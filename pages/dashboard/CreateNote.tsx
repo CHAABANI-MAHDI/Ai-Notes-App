@@ -9,6 +9,9 @@ import { RoutePath, NoteAttachment } from '../../types';
 import { supabase } from '../../supabaseClient';
 import { StorageImage } from '../../components/ui/StorageImage';
 
+const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_ATTACHMENTS_COUNT = 10;
+
 export const CreateNote: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -51,8 +54,39 @@ export const CreateNote: React.FC = () => {
     }
   };
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0)
-      setNewAttachments(prev => [...prev, ...Array.from(e.target.files!)]);
+    const selectedFiles = Array.from(e.target.files || []);
+    if (!selectedFiles.length) return;
+
+    const currentCount = existingAttachments.length + newAttachments.length;
+    const remainingSlots = Math.max(0, MAX_ATTACHMENTS_COUNT - currentCount);
+
+    if (remainingSlots === 0) {
+      alert(`You can upload up to ${MAX_ATTACHMENTS_COUNT} files per note.`);
+      e.target.value = '';
+      return;
+    }
+
+    const oversizedFiles = selectedFiles.filter(file => file.size > MAX_ATTACHMENT_SIZE_BYTES);
+    const sizeValidFiles = selectedFiles.filter(file => file.size <= MAX_ATTACHMENT_SIZE_BYTES);
+    const acceptedFiles = sizeValidFiles.slice(0, remainingSlots);
+    const skippedByCount = sizeValidFiles.slice(remainingSlots);
+
+    if (acceptedFiles.length > 0) {
+      setNewAttachments(prev => [...prev, ...acceptedFiles]);
+    }
+
+    if (oversizedFiles.length > 0 || skippedByCount.length > 0) {
+      const messages: string[] = [];
+      if (oversizedFiles.length > 0) {
+        messages.push(`Skipped ${oversizedFiles.length} file(s) larger than 10 MB.`);
+      }
+      if (skippedByCount.length > 0) {
+        messages.push(`Skipped ${skippedByCount.length} file(s) because max is ${MAX_ATTACHMENTS_COUNT} files.`);
+      }
+      alert(messages.join(' '));
+    }
+
+    e.target.value = '';
   };
   const removeNewAttachment = (index: number) => setNewAttachments(prev => prev.filter((_, i) => i !== index));
   const removeExistingAttachment = async (att: NoteAttachment) => {
@@ -91,6 +125,18 @@ export const CreateNote: React.FC = () => {
     if (!title.trim() && !content.trim()) return;
     setSaving(true);
     try {
+      const totalAttachmentCount = existingAttachments.length + newAttachments.length;
+      if (totalAttachmentCount > MAX_ATTACHMENTS_COUNT) {
+        alert(`You can upload up to ${MAX_ATTACHMENTS_COUNT} files per note.`);
+        return;
+      }
+
+      const oversizedAttachment = newAttachments.find(file => file.size > MAX_ATTACHMENT_SIZE_BYTES);
+      if (oversizedAttachment) {
+        alert(`Attachment "${oversizedAttachment.name}" is larger than 10 MB.`);
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
       let noteId = id;
@@ -218,6 +264,7 @@ export const CreateNote: React.FC = () => {
                 <Paperclip size={13} style={{ color: 'var(--text-accent-soft)' }} /> Attach File
                 <input type="file" multiple className="hidden" onChange={handleAttachmentUpload} />
               </label>
+              <span className="text-xs font-medium" style={{ color: 'var(--text-accent-soft)' }}>Max 10 files • 10 MB each</span>
               {!imagePreview && (
                 <label
                   className="flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-150"

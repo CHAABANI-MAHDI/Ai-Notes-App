@@ -191,6 +191,45 @@
       .ql-toolbar.ql-snow .ql-picker {
         color: #8b5cf6 !important;
       }
+      .ql-toolbar.ql-snow .ql-picker.ql-color .ql-picker-item[data-value=""],
+      .ql-toolbar.ql-snow .ql-picker.ql-background .ql-picker-item[data-value=""] {
+        position: relative;
+        border: 1px solid rgba(148, 163, 184, 0.8) !important;
+      }
+      .ql-toolbar.ql-snow .ql-picker.ql-color .ql-picker-item[data-value=""]::after,
+      .ql-toolbar.ql-snow .ql-picker.ql-background .ql-picker-item[data-value=""]::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        border-top: 2px solid #ef4444;
+        transform: rotate(-45deg);
+        transform-origin: center;
+      }
+      .ql-toolbar.ql-snow button,
+      .ql-toolbar.ql-snow .ql-picker-label {
+        border-radius: 8px !important;
+        transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+      }
+      .ql-toolbar.ql-snow button:hover,
+      .ql-toolbar.ql-snow .ql-picker-label:hover {
+        background-color: rgba(139, 92, 246, 0.12) !important;
+      }
+      .ql-toolbar.ql-snow button.ql-active,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected {
+        background-color: #8b5cf6 !important;
+        color: #ffffff !important;
+      }
+      .ql-toolbar.ql-snow button.ql-active .ql-stroke,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active .ql-stroke,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected .ql-stroke {
+        stroke: #ffffff !important;
+      }
+      .ql-toolbar.ql-snow button.ql-active .ql-fill,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active .ql-fill,
+      .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected .ql-fill {
+        fill: #ffffff !important;
+      }
       .ql-container.ql-snow {
         border: none !important;
         font-family: 'Inter', sans-serif !important;
@@ -224,12 +263,76 @@
         color: #a78bfa !important;
       }
 
+      .dark .ql-toolbar.ql-snow .ql-picker.ql-color .ql-picker-item[data-value=""],
+      .dark .ql-toolbar.ql-snow .ql-picker.ql-background .ql-picker-item[data-value=""] {
+        border-color: rgba(203, 213, 225, 0.6) !important;
+      }
+
+      .dark .ql-toolbar.ql-snow button:hover,
+      .dark .ql-toolbar.ql-snow .ql-picker-label:hover {
+        background-color: rgba(167, 139, 250, 0.2) !important;
+      }
+
+      .dark .ql-toolbar.ql-snow button.ql-active,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected {
+        background-color: #a78bfa !important;
+        color: #0f172a !important;
+      }
+
+      .dark .ql-toolbar.ql-snow button.ql-active .ql-stroke,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active .ql-stroke,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected .ql-stroke {
+        stroke: #0f172a !important;
+      }
+
+      .dark .ql-toolbar.ql-snow button.ql-active .ql-fill,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-label.ql-active .ql-fill,
+      .dark .ql-toolbar.ql-snow .ql-picker:not(.ql-color):not(.ql-background) .ql-picker-item.ql-selected .ql-fill {
+        fill: #0f172a !important;
+      }
+
       .dark .ql-editor {
         color: #cbd5e1 !important;
       }
 
       .dark .ql-editor.ql-blank::before {
         color: #64748b !important;
+      }
+
+      @media (max-width: 768px) {
+        .ql-toolbar.ql-snow {
+          padding: 8px 0 !important;
+          margin-bottom: 12px;
+          border-bottom-width: 1px !important;
+        }
+
+        .ql-toolbar.ql-snow .ql-formats {
+          margin-right: 8px !important;
+        }
+
+        .ql-toolbar.ql-snow button,
+        .ql-toolbar.ql-snow .ql-picker-label {
+          width: 28px !important;
+          height: 28px !important;
+          padding: 3px !important;
+        }
+
+        .ql-toolbar.ql-snow .ql-picker.ql-header .ql-picker-label {
+          width: 72px !important;
+          display: inline-flex;
+          align-items: center;
+          padding: 0 6px !important;
+        }
+
+        .ql-toolbar.ql-snow .ql-picker-options {
+          max-height: 220px;
+          overflow-y: auto;
+        }
+
+        .ql-editor {
+          min-height: 220px;
+        }
       }
     </style>
   <script type="importmap">

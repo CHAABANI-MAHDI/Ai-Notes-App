@@ -92,7 +92,7 @@ export const Editor: React.FC<EditorProps> = ({ value, onChange, placeholder, cl
       };
 
       const toolbar = quillInstance.current.getModule('toolbar')?.container as HTMLElement | undefined;
-      const handleToolbarPointerDown = (event: Event) => {
+      const handleToolbarMouseDown = (event: Event) => {
         const target = event.target as HTMLElement | null;
         const control = target?.closest('button, .ql-picker-item');
         if (!control) return;
@@ -111,8 +111,7 @@ export const Editor: React.FC<EditorProps> = ({ value, onChange, placeholder, cl
         keepMobileEditorFocus();
       };
 
-      toolbar?.addEventListener('mousedown', handleToolbarPointerDown);
-      toolbar?.addEventListener('touchstart', handleToolbarPointerDown, { passive: false });
+      toolbar?.addEventListener('mousedown', handleToolbarMouseDown);
       toolbar?.addEventListener('click', handleToolbarClick);
 
       // Handle changes
@@ -135,8 +134,7 @@ export const Editor: React.FC<EditorProps> = ({ value, onChange, placeholder, cl
       }
 
       return () => {
-        toolbar?.removeEventListener('mousedown', handleToolbarPointerDown);
-        toolbar?.removeEventListener('touchstart', handleToolbarPointerDown);
+        toolbar?.removeEventListener('mousedown', handleToolbarMouseDown);
         toolbar?.removeEventListener('click', handleToolbarClick);
       };
     }
